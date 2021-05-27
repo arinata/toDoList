@@ -1,0 +1,49 @@
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 43px auto;
+}
+
+.headerContainer {
+    background-color: rgb(49, 49, 49);
+    display: grid;
+    grid-template-columns: 43px auto 43px 43px 43px 43px;
+}
+
+.backgroundContainer {
+    display: grid;
+    grid-template-columns: 280px auto;
+}
+
+.sideBar {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(168, 168, 168);
+}
+
+.content {
+    background-color: rgb(218, 241, 255);
+    display: block;
+}
+
+.iconContainer:hover {
+    opacity: 0.4;
+    cursor: pointer;
+}
+
+.headerIcon {
+    width: 80%;
+    margin: 10%;
+}

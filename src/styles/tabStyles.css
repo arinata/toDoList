@@ -1,0 +1,64 @@
+.tabbed {
+    width: 100%;
+    height: auto;
+    margin: 20px auto;
+  }
+  
+  .tabbed > input {
+    display: none;
+  }
+  
+  .tabbed > label {
+    width: 90%;
+    height: 43px;
+    display: block;
+    float: left;
+    cursor: pointer;
+    transition: background-color .3s;
+    border-radius: 10px;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 2.5%;
+    margin-top: 2.5%;
+
+  }
+  
+  .tabbed > label:hover,
+  .tabbed > input:checked + label {
+    background: #cfcfcf;
+  }
+
+  .tabButton {
+    display: grid;
+    height: 43px;
+    grid-template-columns: 43px auto 43px;
+    align-items: center;
+  }
+
+  .projectHeader {
+    display: grid;
+    height: 20px;
+    grid-template-columns: auto 43px;
+    align-items: center;
+  }
+
+  .projects {
+      margin: 5px 5%;
+      height: 20px;
+      width: 100%;
+      font-weight: bold;
+  }
+
+  .deleteIcon {
+    width: 30px;
+    height: 30px;
+    margin: 0px;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    border-radius: 15px;
+  }
+
+  .deleteIcon:hover {
+    background-color: #999999;
+  }
