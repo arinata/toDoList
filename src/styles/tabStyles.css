@@ -62,3 +62,33 @@
   .deleteIcon:hover {
     background-color: #999999;
   }
+
+  h2 {
+    font-weight: bold;
+    text-align: center;
+  }
+  p {
+    text-align: center;
+  }
+
+  .confButton {
+    height:30px;
+    width:100px;
+    border-style: solid;
+    border-radius: 7px;
+    border-color: #555555;
+    border-width: 1px;
+    background-color: #cccccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .confButton:hover {
+    background-color: #999999;
+    cursor: pointer;
+  }
+
+  span {
+    height: 19px;
+  }

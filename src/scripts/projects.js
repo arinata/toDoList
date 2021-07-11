@@ -58,14 +58,14 @@ const projectsCreate = (name) => {
 }
 
 const showProjectContent = (project) => {
-    var output = []
+    let output = []
     for(let i=0; i<project.length;i++){
         output.push(project[i][1].get.values());
     }
     return output;
 }
 
-var projectList = (function(){
+const projectList = (function(){
     var listOfProjects = [];
     const addProject=(project) => {
         listOfProjects.push(project);
@@ -79,7 +79,17 @@ var projectList = (function(){
     const getProject = (index) => {
         return listOfProjects[index];
     }
-    return {addProject,removeProject,addTaskToProject,getProject};
+    const getAllProjects = () => {
+        return listOfProjects;
+    }
+    const showProjectContent = () => {
+        let output = []
+        for(let i=0; i<listOfProjects.length;i++){
+            output.push(listOfProjects[i].getTitle());
+        }
+        return output;
+    }
+    return {addProject,removeProject,addTaskToProject,getProject,getAllProjects,showProjectContent};
 })();
 
 export {projectsCreate,projects,showProjectContent,projectList}

@@ -53,3 +53,28 @@
 .textCenter {
     justify-self: center;
 }
+
+.modalAddTask {
+    display: block;
+    background-color: #ececec;
+    width: 800px;
+    height: 600px;
+    margin: auto;
+    border-radius: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.formAddTaskContainer {
+    width: 80%;
+    height: 80%;
+    display: grid;
+    grid-template-rows: auto;
+}
+
+.inputContainer {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    height: 30px;
+}

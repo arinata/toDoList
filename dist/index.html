@@ -39,7 +39,9 @@
           <div id="tab2">
           </div>
         </div>
-        <div id="content"></div>
+        <div id="content">
+          <div id="contentContainer"></div>
+        </div>
       </div>
     </div>
     <div id="addProjectBG">
@@ -56,9 +58,45 @@
           <p>(All tasks inside the project will be lost)</p>
         </div>
         <div id="confirmBtnContainer">
-          <div id="cancelButton">Cancel</div>
-          <div id="confirmButton">Confirm</div>
+          <div id="cancelButton"><span>Cancel</span></div>
+          <div id="confirmButton"><span>Confirm</span></div>
         </div>
+      </div>
+    </div>
+    <div id="addTaskBG">
+      <div id="addTaskForm">
+        <form id="formAddTaskContainer">
+          <div id="form1">
+            <label for="addTaskName">Task Name</label>
+            <input type="text" id="addTaskName">
+          </div>
+          <div id="form2">
+            <label for="addDescription">Notes</label>
+            <textarea id="addDescription">Add some notes....</textarea>
+          </div>
+          <div id="form3">
+            <label for="datepicker">Due Date</label>
+            <input type="text" id="datepicker">
+          </div>
+          <div id="form4">
+            <label for="selectPriority">Priority</label>
+            <select name="priority" id="selectPriority">
+              <option value=1 id="opt">1</option>
+              <option value=2 id="opt2">2</option>
+              <option value=3 id="opt3">3</option>
+              <option value=4 id="opt4">4</option>
+            </select>
+          </div>
+          <div id="form5">
+            <label for="selectProject">Project</label>
+            <select name="project" id="selectProject">
+            </select>
+          </div>
+          <div id="addConfirmBtnContainer">
+            <div id="addCancelButton"><span>Cancel</span></div>
+            <div id="addConfirmButton"><span>Confirm</span></div>
+          </div>
+        </form>
       </div>
     </div>
     <script src="main.js"></script>
