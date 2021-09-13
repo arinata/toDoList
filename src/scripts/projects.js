@@ -1,68 +1,85 @@
-import { todosSetPriority } from "./tasks";
+import { todosSetPriority, todos } from "./tasks";
 
-const projects = (name) => {
-    var title = name, tasks = [];
-    const addTaskLast = (todos) => {
-        tasks.push([tasks.length,todos]);
+const projects = (() => {
+    const todos = (name) => {
+        var title = name, description = "", dueDate = "", priority = 1, checkList = 0, project = "";
+        return {title,description,dueDate,priority,checkList,project};
     }
-    const addTask = (todos) => {
-        if(tasks.length==0){
-            addTaskLast(todos);
-        }
-        else{
-            for(let i = 0;i<tasks.length;i++){
-                if(tasks[i][1].get.priority()>todos.get.priority()){
-                    tasks.splice(i,0,[i,todos]);
-                    updateIndexAdd(i);
-                    break;
-                }
-                else if(i==tasks.length-1){
-                    addTaskLast(todos);
-                    break;
-                }
-            }
-        }   
+
+    var tasks = [];
+
+    const addTask = (title,description,dueDate,priority,project) => {
+        const newTodos = todos(title);
+        todosModify(newTodos,title,description,dueDate,priority,project);
+        tasks.push(newTodos);
     }
+
+    const todosModify = (task,title,description,dueDate,priority,project) => {
+        task.title = title;
+        task.description = description;
+        task.dueDate = dueDate;
+        task.priority = priority
+        task.project = project;
+    }
+
     const removeTask = (index) => {
         tasks.splice(index,1);
-        updateIndexRemove(index);
     }
-    const updateIndexRemove = (index) => {
-        for(var i=index; i<tasks.length; i++){
-            tasks[i][0] = i;
+
+    const getTasksByProject = (projectTitle) => {
+        var taskList = [];
+        for(var i = 0;i<tasks.length;i++){
+            if(tasks[i].project==projectTitle){
+                taskList.push([tasks[i], i]);
+            }
+        }
+        return taskList;
+    }
+
+    const removeTaskByProject = (projectTitle) => {
+        for(var i = tasks.length-1; i>-1; i--){
+            if(tasks[i].project==projectTitle){
+                tasks.splice(i,1);
+            }
         }
     }
-    const updateIndexAdd = (index) => {
-        for(let i = index+1; i<tasks.length; i++){
-            tasks[i][0] = i;
+
+    const getTasksbyDay = (today) => {
+        var taskList = [];
+        for(var i = 0;i<tasks.length;i++){
+            if(tasks[i].dueDate==today){
+                taskList.push([tasks[i], i]);
+            }
         }
+        return taskList;
     }
-    const getTasks = () => {
-        return tasks;
+    
+    const getTasksByIndex = (index) => {
+        return tasks[index];
     }
+
     const changePriority = (index,priority) => {
-        var tempTodos = tasks.splice(index,1)[0][1];
-        updateIndexRemove(index);
-        todosSetPriority(tempTodos,priority);
-        addTask(tempTodos);
+        tasks[index].priority = priority;
     }
-    const getTitle = () => {
-        return title;
+
+    const done = (index) => {
+        tasks[index].checkList = 1;
     }
-    return {addTask,removeTask,getTasks,changePriority,getTitle};
-}
+
+    const getProjectName = (index) => {
+        return tasks[index].project;
+    }
+
+    const getTasksNumber = () => {
+        return tasks.length;
+    }
+
+    return {addTask,removeTask,getTasksByIndex,getTasksByProject,changePriority,done,getProjectName,getTasksNumber,todosModify,getTasksbyDay,removeTaskByProject};
+})();
 
 const projectsCreate = (name) => {
     const newProject = projects(name);
     return newProject;
-}
-
-const showProjectContent = (project) => {
-    let output = []
-    for(let i=0; i<project.length;i++){
-        output.push(project[i][1].get.values());
-    }
-    return output;
 }
 
 const projectList = (function(){
@@ -85,11 +102,15 @@ const projectList = (function(){
     const showProjectContent = () => {
         let output = []
         for(let i=0; i<listOfProjects.length;i++){
-            output.push(listOfProjects[i].getTitle());
+            //output.push(listOfProjects[i].getTitle());
+            output.push(listOfProjects[i]);
         }
         return output;
     }
-    return {addProject,removeProject,addTaskToProject,getProject,getAllProjects,showProjectContent};
+    const getProjectsNumber = () => {
+        return listOfProjects.length;
+    }
+    return {addProject,removeProject,addTaskToProject,getProject,getAllProjects,showProjectContent,getProjectsNumber};
 })();
 
-export {projectsCreate,projects,showProjectContent,projectList}
+export {projectsCreate,projects,projectList}

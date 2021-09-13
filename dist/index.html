@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>To Do List</title>
+    <link rel="stylesheet" href="taskStyle.css">
   </head>
   <body>
     <div id="background">
@@ -28,7 +29,7 @@
             <label for="tab-nav-2">
               <div id="tabContainer2">
                 <div id="upcomingIcon"></div>
-                <span>Upcoming</span>
+                <span>Tomorrow</span>
               </div>
             </label>
           </div>
@@ -40,7 +41,30 @@
           </div>
         </div>
         <div id="content">
-          <div id="contentContainer"></div>
+          <div id="contentContainer" class="contentContainer">
+            <div id="topMargin0" class="taskMargin"></div>
+            <div id="task0" class="task">
+              <div id="priorityColor0" class="priorityColor"></div>
+              <div id="taskTitle0" class="taskTitle">Mandiin Qui Qui bersaudara</div>
+              <div id="dueDate0" class="dueDate">30/08/2021</div>
+              <div id="prioritySet0" class="prioritySet">
+                <label for="selectPriority0">Priority</label>
+                <select name="priority" id="selectPriority0">
+                  <option value=1>1</option>
+                  <option value=2>2</option>
+                  <option value=3>3</option>
+                  <option value=4>4</option>
+                </select>
+              </div>
+              <div id="taskDone0" class="taskDone">
+                <div class="doneIcon">✔</div>
+              </div>
+              <div id="deleteTask0" class="deleteTask">
+                <div class="deleteIcon">❌</div>
+              </div>
+            </div>
+            <div id="botMargin0" class="taskMargin"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -71,8 +95,8 @@
             <input type="text" id="addTaskName">
           </div>
           <div id="form2">
-            <label for="addDescription">Notes</label>
-            <textarea id="addDescription">Add some notes....</textarea>
+            <label for="addDescription">Description</label>
+            <textarea id="addDescription">Add some description....</textarea>
           </div>
           <div id="form3">
             <label for="datepicker">Due Date</label>

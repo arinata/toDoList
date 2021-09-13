@@ -1,6 +1,7 @@
 import '../styles/style.css';
 import '../styles/tabStyles.css';
 import '../styles/modal.css';
+import '../styles/taskStyle.css';
 import '../datepicker-master/datepicker.css';
 import home from '../img/038-home.png';
 import addTask from '../img/057-plus.png';
@@ -15,9 +16,14 @@ import { projects,projectList } from './projects';
 import {childrenRemover,childRemover} from './domFunction'
 import {DatePicker} from '../datepicker-master/datepicker'
 import { addDays, format } from 'date-fns';
+import {writeTaskToLocal,writeProjectToLocal,rewriteTasksProjectsToLocal} from './localStorage';
 
 let projectIndexToBeDeleted = 0;
-const today = new Date(); ;
+const today = new Date();
+const tomorrow = addDays(today,1);
+var activeTaskFamily = "Today";
+var modifiedTaskIndex = 0;
+var modify = 0;
 
 const addImage = (parentElement,imgSrc,style) => {
     const newImage = new Image();
@@ -87,24 +93,29 @@ const generateProjectsList = () => {
         insertNewElement("label","labelForTabPro"+i,"","","tab2");
         document.getElementById("labelForTabPro"+i).htmlFor = "tab-pro-"+i;
         insertNewElement("div","tabPro"+i,"tabButton","","labelForTabPro"+i)
+        document.getElementById("tabPro"+i).addEventListener('click',function(e){
+            let idProject = this.id;
+            activeTaskFamily = projectList.getProject(idProject[idProject.length-1]);
+            childrenRemover("contentContainer");
+            var filteredTasks = projects.getTasksByProject(activeTaskFamily);
+            showTasks(filteredTasks);
+        })
         insertNewElement("div","project"+i,"","","tabPro"+i);
         addImage("project"+i,projectIcon,"headerIcon");
-        insertNewElement("span","project"+i+"Title","",projectList.getProject(i).getTitle(),"tabPro"+i);
+        insertNewElement("span","project"+i+"Title","",projectList.getProject(i),"tabPro"+i);
         insertNewElement("div","projectDelete"+i,"deleteIcon","","tabPro"+i);
         insertNewElement("span","proDelIcon"+i,"","❌","projectDelete"+i);
         document.getElementById("projectDelete"+i).addEventListener('click',function(e){
-            console.log(this);
             let idProject = this.id;
             projectIndexToBeDeleted = idProject[idProject.length-1];
-            console.log("ini ID Project:  "+idProject);
+            console.log("Project yang mau dihapus: "+projectIndexToBeDeleted);
             document.getElementById("deletePrjctBG").style.display="block";
-            console.log("akan delete index:  "+projectIndexToBeDeleted);
         })
     }
 }
 
-const showAddedProject = (projects) => {
-    let i = projects.getAllProjects().length-1;
+const showAddedProject = () => {
+    let i = projectList.getAllProjects().length-1;
     console.log(i);
     insertNewElement("input","tab-pro-"+i,"","","tab2");
     document.getElementById("tab-pro-"+i).type = "radio";
@@ -112,22 +123,151 @@ const showAddedProject = (projects) => {
     insertNewElement("label","labelForTabPro"+i,"","","tab2");
     document.getElementById("labelForTabPro"+i).htmlFor = "tab-pro-"+i;
     insertNewElement("div","tabPro"+i,"tabButton","","labelForTabPro"+i)
+    document.getElementById("tabPro"+i).addEventListener('click',function(e){
+        let idProject = this.id;
+        activeTaskFamily = projectList.getProject(idProject[idProject.length-1]);
+        childrenRemover("contentContainer");
+        var filteredTasks = projects.getTasksByProject(activeTaskFamily);        
+        showTasks(filteredTasks);
+    })
     insertNewElement("div","project"+i,"","","tabPro"+i);
     addImage("project"+i,projectIcon,"headerIcon");
-    insertNewElement("span","project"+i+"Title","",projects.getProject(i).getTitle(),"tabPro"+i);
-    console.log(i+"okenih"+projects.getProject(i).getTitle());
+    insertNewElement("span","project"+i+"Title","",projectList.getProject(i),"tabPro"+i);
     insertNewElement("div","projectDelete"+i,"deleteIcon","","tabPro"+i);
     insertNewElement("span","proDelIcon"+i,"","❌","projectDelete"+i);
     document.getElementById("projectDelete"+i).addEventListener('click',function(e){
-        console.log(this);
         let idProject = this.id;
         projectIndexToBeDeleted = idProject[idProject.length-1];
+        console.log("Project yang mau dihapus: "+projectIndexToBeDeleted);
         document.getElementById("deletePrjctBG").style.display="block";
     })
 }
 
-const showTaskAtDate = (date) => {
-    insertDateHeader(date);
+const showTask = (index,task) => {
+    if(task[0].checkList==0){
+        if(document.getElementById("contentContainer").childElementCount==0){
+            insertNewElement("div","taskMargin","taskMargin","","contentContainer");
+        }
+        insertNewElement("div", "task"+task[1], "task", "", "contentContainer");
+        insertNewElement("div","priorityColor"+task[1],"priorityColor","","task"+task[1]);
+        changeTaskColor(task[0],task[1]);
+        insertNewElement("div","taskTitle"+task[1],"taskTitle",task[0].title,"task"+task[1]);
+        insertNewElement("div","dueDate"+task[1],"dueDate",task[0].dueDate,"task"+task[1]);
+        insertNewElement("div","prioritySet"+task[1],"prioritySet","","task"+task[1]);
+        insertNewElement("label","priorityLabel"+task[1],"selectPriority","Priority","prioritySet"+task[1]);
+        document.getElementById("priorityLabel"+task[1]).htmlFor = "selectPriority"+task[1];
+        insertNewElement("select","selectPriority"+task[1],"","","prioritySet"+task[1]);
+        insertNewElement("option","option1"+task[1],"","1","selectPriority"+task[1]);
+        document.getElementById("option1"+task[1]).value = "1";
+        insertNewElement("option","option2"+task[1],"","2","selectPriority"+task[1]);
+        document.getElementById("option2"+task[1]).value = "2";
+        insertNewElement("option","option3"+task[1],"","3","selectPriority"+task[1]);
+        document.getElementById("option3"+task[1]).value = "3";
+        insertNewElement("option","option4"+task[1],"","4","selectPriority"+task[1]);
+        document.getElementById("option4"+task[1]).value = "4";
+        document.getElementById("selectPriority"+task[1]).value = task[0].priority;
+        insertNewElement("div","taskDone"+task[1],"taskDone","","task"+task[1]);
+        insertNewElement("div","","doneIcon","✔","taskDone"+task[1]);
+        insertNewElement("div","deleteTask"+task[1],"deleteTask","","task"+task[1]);
+        insertNewElement("div","","deleteIcon","❌","deleteTask"+task[1]);
+        insertNewElement("div","botMargin"+task[1],"taskMargin","","contentContainer");
+
+
+        document.getElementById("task"+task[1]).addEventListener('click', function(e){
+            showTaskForm();            
+            var indexTask = getTaskIndex(this.id,4);
+            document.getElementById("addTaskName").value = projects.getTasksByIndex(indexTask).title;
+            document.getElementById("addDescription").value = projects.getTasksByIndex(indexTask).description;
+            document.getElementById("datepicker").value = projects.getTasksByIndex(indexTask).dueDate;
+            console.log(projects.getTasksByIndex(indexTask).dueDate);
+            document.getElementById("selectPriority").value = projects.getTasksByIndex(indexTask).priority;
+            document.getElementById("selectProject").value = projects.getTasksByIndex(indexTask).project;
+            modify = 1;
+            modifiedTaskIndex = indexTask;
+        })
+        document.getElementById("selectPriority"+task[1]).addEventListener('click', function(e){
+            e.stopPropagation();
+            var indexTask = getTaskIndex(this.id,14);
+            projects.changePriority(indexTask,document.getElementById("selectPriority"+indexTask).value);
+            changeTaskColor(projects.getTasksByIndex(indexTask),indexTask);
+        })
+        document.getElementById("taskDone"+task[1]).addEventListener('click', function(e){
+            e.stopPropagation();
+            var indexTask = getTaskIndex(this.id,8);
+            projects.done(indexTask);
+            writeTaskToLocal(indexTask);
+            if(document.getElementById("contentContainer").childElementCount == 3){
+                childrenRemover("contentContainer");
+            }
+            else{
+                let delChild1 = document.getElementById("task"+indexTask);
+                let delChild2 = document.getElementById("botMargin"+indexTask);
+                document.getElementById("contentContainer").removeChild(delChild1);
+                document.getElementById("contentContainer").removeChild(delChild2);
+            }
+        })
+        document.getElementById("deleteTask"+task[1]).addEventListener('click', function(e){
+            e.stopPropagation();
+            var indexTask = getTaskIndex(this.id,10);
+            console.log(indexTask);
+            let projectName = projects.getProjectName(indexTask);
+            projects.removeTask(indexTask);
+            childrenRemover("contentContainer");
+            var filteredTasks = projects.getTasksByProject(projectName);
+            showTasks(filteredTasks);
+            rewriteTasksProjectsToLocal();
+        })
+    }
+}
+
+const changeTaskColor = (task,index) => {
+    switch(task.priority){
+        case '1':
+            document.getElementById("priorityColor"+index).style.backgroundColor = 'red';
+            break;
+        case '2':
+            document.getElementById("priorityColor"+index).style.backgroundColor = 'orange';
+            break;
+        case '3':
+            document.getElementById("priorityColor"+index).style.backgroundColor = 'yellow';
+            break;
+        case '4':
+            document.getElementById("priorityColor"+index).style.backgroundColor = 'greenyellow';
+            break;
+    }
+}
+
+const showTaskForm = () => {
+    document.getElementById("addTaskBG").style.display="block";
+    let isiProject = projectList.getAllProjects();
+    childrenRemover("selectProject");
+    for(let i=0;i<isiProject.length;i++){
+        let options = document.createElement("option");
+        options.text = isiProject[i];
+        options.value = isiProject[i];
+        document.getElementById("selectProject").appendChild(options);
+    }
+    document.getElementById("addTaskName").value = "";
+    document.getElementById("addDescription").value = "Add some description....";
+    document.getElementById("datepicker").value = format(tomorrow, 'dd/MM/yyyy');
+    document.getElementById("selectPriority").value = "1";
+}
+
+const showTasks = (filteredTasks) => {
+    if(filteredTasks!=null){
+        for(let i=0; i<filteredTasks.length;i++){
+            showTask(i,filteredTasks[i]);
+        }
+    }
+}
+
+const getTaskIndex = (idTask,idStart) => {
+    var indexTask = "";
+    for(var i = idStart;i<idTask.length;i++){
+        indexTask = indexTask + idTask[i];
+    }
+    console.log("indexnya"+indexTask);
+    return parseInt(indexTask);
 }
 
 const insertDateHeader = (date) => {
@@ -137,31 +277,7 @@ const insertDateHeader = (date) => {
     else{
         insertNewElement("div","headerToday","dateHeader",format(date,"EEE, dd/MM/yyyy"),"contentContainer");
     }
-    
 }
-
-document.getElementById("cancelButton").addEventListener('click',function(e){
-    document.getElementById("deletePrjctBG").style.display="none";
-})
-
-document.getElementById("confirmButton").addEventListener('click',function(e){
-    document.getElementById("deletePrjctBG").style.display="none";
-    projectList.removeProject(projectIndexToBeDeleted);
-    childrenRemover("tab2");
-    generateProjectsList();
-})
-
-document.getElementById("headerAddTask").addEventListener('click',function(e){
-    document.getElementById("addTaskBG").style.display="block";
-    let isiProject = projectList.getAllProjects();
-    childrenRemover("selectProject");
-    for(let i=0;i<isiProject.length;i++){
-        let options = document.createElement("option");
-        options.text = isiProject[i].getTitle();
-        options.value = isiProject[i].getTitle();
-        document.getElementById("selectProject").appendChild(options);
-    }
-})
 
 const insertNewElement = (elmntType,elmntId,elmntClass,text,parentElmnt) => {
     const newElmnt = document.createElement(elmntType);
@@ -171,4 +287,10 @@ const insertNewElement = (elmntType,elmntId,elmntClass,text,parentElmnt) => {
     document.getElementById(parentElmnt).appendChild(newElmnt);
 }
 
-export {pageLoader,generateProjectsList,showAddedProject};
+document.getElementById("headerAddTask").addEventListener('click',function(e){
+    showTaskForm();
+    modify = 0;
+})
+
+export {pageLoader,generateProjectsList,showAddedProject,activeTaskFamily,showTask,modifiedTaskIndex,modify,
+    changeTaskColor, showTasks, projectIndexToBeDeleted, showTaskForm};
