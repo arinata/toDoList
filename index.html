@@ -8,12 +8,19 @@
   <body>
     <div id="background">
       <div id="headerContainer">
-        <div id="homeButton"></div>
-        <div id="headerSpace"></div>
-        <div id="headerAddTask"></div>
-        <div id="help"></div>
-        <div id="notification"></div>
-        <div id="account"></div>
+        <div id="leftSpace"></div>
+        <div id="homeButton">
+          <span id="textHome">Home</span>
+        </div>
+        <div id="headerDate"></div>
+        <div id="headerClock"></div>
+        <div id="headerAddTask">
+          <span id="textAddTask">Add Task</span>
+        </div>
+        <div id="headerAttribution">
+          <span id="textAttribution">Attribution</span>
+        </div>
+        <div id="rightSpace"></div>
       </div>
       <div id="backgroundContainer">
         <div id="sideBar">
@@ -35,36 +42,15 @@
           </div>
           <div id="projectHeader">
             <div id="projects">Projects</div>
-            <div id="addProjectIcon"></div>
+            <div id="addProjectIcon">
+              <span id="textAddProject">Add Project</span>
+            </div>
           </div>
           <div id="tab2">
           </div>
         </div>
         <div id="content">
-          <div id="contentContainer" class="contentContainer">
-            <div id="topMargin0" class="taskMargin"></div>
-            <div id="task0" class="task">
-              <div id="priorityColor0" class="priorityColor"></div>
-              <div id="taskTitle0" class="taskTitle">Mandiin Qui Qui bersaudara</div>
-              <div id="dueDate0" class="dueDate">30/08/2021</div>
-              <div id="prioritySet0" class="prioritySet">
-                <label for="selectPriority0">Priority</label>
-                <select name="priority" id="selectPriority0">
-                  <option value=1>1</option>
-                  <option value=2>2</option>
-                  <option value=3>3</option>
-                  <option value=4>4</option>
-                </select>
-              </div>
-              <div id="taskDone0" class="taskDone">
-                <div class="doneIcon">✔</div>
-              </div>
-              <div id="deleteTask0" class="deleteTask">
-                <div class="deleteIcon">❌</div>
-              </div>
-            </div>
-            <div id="botMargin0" class="taskMargin"></div>
-          </div>
+          <div id="contentContainer" class="contentContainer"></div>
         </div>
       </div>
     </div>
@@ -121,6 +107,12 @@
             <div id="addConfirmButton"><span>Confirm</span></div>
           </div>
         </form>
+      </div>
+    </div>
+    <div id="AttributionBG">
+      <div id="attributeContainer">
+        <h2 id="AttributeTitle">Attribution</h2>
+        <div>Icons made by <a href="https://icon54.com/" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
       </div>
     </div>
     <script src="main.js"></script>
