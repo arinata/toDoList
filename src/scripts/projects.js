@@ -1,5 +1,3 @@
-import { todosSetPriority, todos } from "./tasks";
-
 const projects = (() => {
     const todos = (name) => {
         var title = name, description = "", dueDate = "", priority = 1, checkList = 0, project = "";

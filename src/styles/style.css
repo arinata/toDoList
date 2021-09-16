@@ -19,7 +19,7 @@ body {
 .headerContainer {
     background-color: rgb(49, 49, 49);
     display: grid;
-    grid-template-columns: 43px auto 43px 43px 43px 43px;
+    grid-template-columns: 15px 43px auto auto 43px 43px 25px;
 }
 
 .backgroundContainer {
@@ -55,12 +55,54 @@ body {
     grid-template-columns: auto auto auto auto auto auto auto;
 }
 
+.iconContainer {
+    position: relative;
+}
+
 .iconContainer:hover {
-    opacity: 0.4;
+    opacity: 0.7;
     cursor: pointer;
+}
+
+/* Tooltip text */
+.iconContainer .iconContainerText {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+   
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    top: 100%;
+    left: -90%;
+    z-index: 20;
+}
+
+.iconContainer:hover .iconContainerText {
+    visibility: visible;
 }
 
 .headerIcon {
     width: 80%;
     margin: 10%;
+}
+
+.dateStyle {
+    align-self: center;
+    justify-self: right;
+    font-size: larger;
+    color: white;
+    font-family: helvetica;
+}
+
+.clockStyle {
+    align-self: center;
+    justify-self: right;
+    font-size: larger;
+    color: white;
+    font-family: helvetica;
+    margin-right: 10px;
 }

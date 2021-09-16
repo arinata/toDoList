@@ -43,9 +43,7 @@ const pageLoader = () => {
     document.getElementById("content").classList.add("content");
     addImage("homeButton",home,"headerIcon");
     addImage("headerAddTask",addTask,"headerIcon");
-    addImage("help",help,"headerIcon");
-    addImage("notification",notification,"headerIcon");
-    addImage("account",account,"headerIcon");
+    addImage("headerAttribution",account,"headerIcon");
     document.getElementById("tab1").classList.add("tabbed");
     addImage("todayIcon",todayIcon,"headerIcon");
     document.getElementById("tabContainer1").classList.add("tabButton");
@@ -61,6 +59,9 @@ const pageLoader = () => {
     document.getElementById("addProjectName").classList.add("addProjectName");
     deleteConfirmationStyling();    
     addTaskFormStyling();
+    atributionStyling();
+    dateClockStyling();
+    addToolTipTexts();
 }
 
 const deleteConfirmationStyling = () => {
@@ -83,6 +84,23 @@ const addTaskFormStyling = () => {
     document.getElementById("addConfirmBtnContainer").classList.add("modalConfirmButtonContainer");
     document.getElementById("addConfirmButton").classList.add("confButton");
     document.getElementById("addCancelButton").classList.add("confButton");
+}
+
+const atributionStyling = () => {
+    document.getElementById("AttributionBG").classList.add("modalProject");
+    document.getElementById("attributeContainer").classList.add("modalAttribution");
+}
+
+const dateClockStyling = () => {
+    document.getElementById("headerDate").classList.add("dateStyle");
+    document.getElementById("headerClock").classList.add("clockStyle");
+}
+
+const addToolTipTexts = () => {
+    document.getElementById("textHome").classList.add("iconContainerText");
+    document.getElementById("textAddTask").classList.add("iconContainerText");
+    document.getElementById("textAttribution").classList.add("iconContainerText");
+    document.getElementById("textAddProject").classList.add("iconContainerText");
 }
 
 const generateProjectsList = () => {
@@ -108,7 +126,6 @@ const generateProjectsList = () => {
         document.getElementById("projectDelete"+i).addEventListener('click',function(e){
             let idProject = this.id;
             projectIndexToBeDeleted = idProject[idProject.length-1];
-            console.log("Project yang mau dihapus: "+projectIndexToBeDeleted);
             document.getElementById("deletePrjctBG").style.display="block";
         })
     }
@@ -116,7 +133,6 @@ const generateProjectsList = () => {
 
 const showAddedProject = () => {
     let i = projectList.getAllProjects().length-1;
-    console.log(i);
     insertNewElement("input","tab-pro-"+i,"","","tab2");
     document.getElementById("tab-pro-"+i).type = "radio";
     document.getElementById("tab-pro-"+i).setAttribute("name","tabs")
@@ -138,13 +154,12 @@ const showAddedProject = () => {
     document.getElementById("projectDelete"+i).addEventListener('click',function(e){
         let idProject = this.id;
         projectIndexToBeDeleted = idProject[idProject.length-1];
-        console.log("Project yang mau dihapus: "+projectIndexToBeDeleted);
         document.getElementById("deletePrjctBG").style.display="block";
     })
 }
 
 const showTask = (index,task) => {
-    if(task[0].checkList==0){
+    if((task[0].checkList==0)&&(task[0].dueDate>=format(today, 'dd/MM/yyyy'))){
         if(document.getElementById("contentContainer").childElementCount==0){
             insertNewElement("div","taskMargin","taskMargin","","contentContainer");
         }
@@ -179,7 +194,6 @@ const showTask = (index,task) => {
             document.getElementById("addTaskName").value = projects.getTasksByIndex(indexTask).title;
             document.getElementById("addDescription").value = projects.getTasksByIndex(indexTask).description;
             document.getElementById("datepicker").value = projects.getTasksByIndex(indexTask).dueDate;
-            console.log(projects.getTasksByIndex(indexTask).dueDate);
             document.getElementById("selectPriority").value = projects.getTasksByIndex(indexTask).priority;
             document.getElementById("selectProject").value = projects.getTasksByIndex(indexTask).project;
             modify = 1;
@@ -209,11 +223,18 @@ const showTask = (index,task) => {
         document.getElementById("deleteTask"+task[1]).addEventListener('click', function(e){
             e.stopPropagation();
             var indexTask = getTaskIndex(this.id,10);
-            console.log(indexTask);
             let projectName = projects.getProjectName(indexTask);
             projects.removeTask(indexTask);
             childrenRemover("contentContainer");
-            var filteredTasks = projects.getTasksByProject(projectName);
+            if(activeTaskFamily=="Today"){
+                var filteredTasks = projects.getTasksbyDay(today);
+            }
+            else if(activeTaskFamily=="Tomorrow"){
+                var filteredTasks = projects.getTasksbyDay(tomorrow);
+            }
+            else{
+                var filteredTasks = projects.getTasksByProject(projectName);
+            }
             showTasks(filteredTasks);
             rewriteTasksProjectsToLocal();
         })
@@ -266,7 +287,6 @@ const getTaskIndex = (idTask,idStart) => {
     for(var i = idStart;i<idTask.length;i++){
         indexTask = indexTask + idTask[i];
     }
-    console.log("indexnya"+indexTask);
     return parseInt(indexTask);
 }
 

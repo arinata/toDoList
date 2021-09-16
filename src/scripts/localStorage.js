@@ -1,5 +1,6 @@
 import { projects,projectList } from './projects';
 import { addDays, format } from 'date-fns';
+import { showTasks } from './styler';
 
 const today = new Date();
 const tomorrow = addDays(today,1);
@@ -31,7 +32,6 @@ function storageAvailable(type) {
 }
 
 const writeTaskToLocal = (taskIndex) =>{
-    console.log(localStorage.getItem("task"+taskIndex+".checkList"));
     var task = projects.getTasksByIndex(taskIndex);
     localStorage.setItem("ProjectSize",projects.getTasksNumber());
     localStorage.setItem("task"+taskIndex+".title",task.title);
@@ -40,7 +40,6 @@ const writeTaskToLocal = (taskIndex) =>{
     localStorage.setItem("task"+taskIndex+".priority",task.priority);
     localStorage.setItem("task"+taskIndex+".checkList",task.checkList);
     localStorage.setItem("task"+taskIndex+".project",task.project);
-    console.log(localStorage.getItem("task"+taskIndex+".checkList"));
 }
 
 const rewriteTasksProjectsToLocal = () => {
@@ -62,8 +61,6 @@ const rewriteTasksProjectsToLocal = () => {
     for(let i = 0; i<projectsLength; i++){
         localStorage.setItem("project"+i,projectList.getProject(i));
     }
-
-    console.log(localStorage.getItem("ProjectSize"));
 }
 
 const writeProjectToLocal = (projectIndex) =>{
@@ -97,27 +94,24 @@ const readAllProject = () =>{
 
 const readAllProjectList = () =>{
     if(localStorage.getItem("ProjectListSize")!=null){
-        console.log("adaprojectName="+localStorage.getItem("ProjectListSize"));
         for(var i=0;i<localStorage.getItem("ProjectListSize");i++){
             projectList.addProject(localStorage.getItem("project"+i));
-            console.log("iterasi ke:"+i);
         }
     }
 }
 
-function initialization(){
+function initialization(dummyData){
     if (storageAvailable('localStorage')) {
     // Yippee! We can use localStorage awesomeness
         localStorageAvailable = true;
         if(!localStorage.getItem('ProjectListSize')){
-            console.log("ternyata masuk sini");
-            localStorage.setItem("ProjectSize",5);
+            localStorage.setItem("ProjectSize",dummyData.length);
             localStorage.setItem("ProjectListSize",1);
             localStorage.setItem("project0","Project 1");
-            for(let i=0;i<5;i++){
+            for(let i=0;i<dummyData.length;i++){
                 localStorage.setItem("task"+i+".title",dummyData[i][0]);
                 localStorage.setItem("task"+i+".description",dummyData[i][1]);
-                localStorage.setItem("task"+i+".dueDate",format(today, 'dd/MM/yyyy'));
+                localStorage.setItem("task"+i+".dueDate",format(dummyData[i][2], 'dd/MM/yyyy'));
                 localStorage.setItem("task"+i+".priority",dummyData[i][3]);
                 localStorage.setItem("task"+i+".checkList",0);
                 localStorage.setItem("task"+i+".project","Project 1");                
@@ -125,21 +119,14 @@ function initialization(){
         }
         readAllProjectList();
         readAllProject();
-        console.log(projects.getTasksByIndex(0));
-        console.log(projectList.getAllProjects());
+        var filteredTasks = projects.getTasksbyDay(format(today, 'dd/MM/yyyy'));
+        showTasks(filteredTasks); 
+        document.getElementById("tab-nav-1").checked = true;
     }
     else {
     // Too bad, no localStorage for us
         localStorageAvailable = false;
     }        
 }
-
-
-const dummyData = [ ["cuci baju","cuci semua baju kotor termasuk punya tetangga",today,"1"],
-                    ["cuci piting","cuci piring, gelas, wajan, panci kotor",today,"2"],
-                    ["tidur","",today,"3"],
-                    ["makan","pastikan makan sayur, prona, prohe",today,"4"],
-                    ["masak","jangan kebanyakan garam lagi",today,'1']
-                    ];
 
 export {initialization,writeTaskToLocal,writeProjectToLocal,rewriteTasksProjectsToLocal};

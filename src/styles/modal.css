@@ -50,6 +50,18 @@
     justify-items: center;
 }
 
+.modalAttribution {
+    display: block;
+    background-color: #ececec;
+    width: 600px;
+    height: 200px;
+    margin: auto;
+    border-radius: 7px;
+    display: grid;
+    grid-template-rows: auto auto auto;
+    justify-items: center;
+}
+
 .textCenter {
     justify-self: center;
 }
